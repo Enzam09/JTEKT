@@ -1,0 +1,433 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>JTekt Smart Storage</title>
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<!-- ===================== TOPBAR (mobile) ===================== -->
+<header class="topbar">
+  <button id="btnMenuToggle" class="btn-icon" aria-label="Abrir menu">☰</button>
+  <div class="topbar-brand">
+    <span class="brand-mark">JT</span>
+    <span class="brand-name">Smart Storage</span>
+  </div>
+  <button id="btnDemoTop" class="btn-icon" title="Modo Demonstração">🎬</button>
+</header>
+
+<div class="app-shell">
+
+  <!-- ===================== SIDEBAR ===================== -->
+  <aside id="sidebar" class="sidebar">
+    <div class="sidebar-header">
+      <div class="brand">
+        <span class="brand-mark">JT</span>
+        <div>
+          <div class="brand-title">JTekt</div>
+          <div class="brand-sub">Smart Storage</div>
+        </div>
+      </div>
+    </div>
+
+    <nav class="nav-menu">
+      <button class="nav-item active" data-page="dashboard"><span class="nav-icon">🏠</span><span>Dashboard</span></button>
+      <button class="nav-item" data-page="estoque"><span class="nav-icon">📦</span><span>Estoque</span></button>
+      <button class="nav-item" data-page="localizar"><span class="nav-icon">🔎</span><span>Localizar Peça</span></button>
+      <button class="nav-item" data-page="enderecamento"><span class="nav-icon">📍</span><span>Endereçamento</span></button>
+      <button class="nav-item" data-page="movimentacoes"><span class="nav-icon">🔄</span><span>Movimentações</span></button>
+      <button class="nav-item" data-page="organizacao"><span class="nav-icon">🧠</span><span>Organização Inteligente</span></button>
+      <button class="nav-item" data-page="indicadores"><span class="nav-icon">📊</span><span>Indicadores</span></button>
+      <button class="nav-item" data-page="configuracoes"><span class="nav-icon">⚙️</span><span>Configurações</span></button>
+    </nav>
+
+    <div class="sidebar-footer">
+      <button id="btnDemoSide" class="btn btn-outline btn-block">🎬 Modo Demonstração</button>
+      <div class="sidebar-tag">Protótipo funcional — dados simulados</div>
+    </div>
+  </aside>
+
+  <div id="sidebarOverlay" class="sidebar-overlay"></div>
+
+  <!-- ===================== MAIN CONTENT ===================== -->
+  <main class="main-content">
+
+    <div id="alertsBar" class="alerts-bar"></div>
+
+    <!-- ---------- DASHBOARD ---------- -->
+    <section id="page-dashboard" class="page active">
+      <div class="page-header">
+        <h1>Dashboard</h1>
+        <p class="page-subtitle">Visão geral da operação de armazenagem</p>
+      </div>
+
+      <div class="kpi-grid">
+        <div class="kpi-card" id="kpiOcupacao">
+          <div class="kpi-top"><span class="kpi-label">Ocupação</span><span class="kpi-icon">🏗️</span></div>
+          <div class="kpi-value">90%</div>
+          <div class="progress-bar"><div class="progress-fill" id="ocupacaoFill" style="width:90%"></div></div>
+          <div class="kpi-note" id="ocupacaoNote">Ocupação atual</div>
+        </div>
+
+        <div class="kpi-card">
+          <div class="kpi-top"><span class="kpi-label">Acuracidade</span><span class="kpi-icon">🎯</span></div>
+          <div class="kpi-value">99%+</div>
+          <div class="kpi-note">Precisão de estoque</div>
+        </div>
+
+        <div class="kpi-card">
+          <div class="kpi-top"><span class="kpi-label">Posições</span><span class="kpi-icon">📦</span></div>
+          <div class="kpi-value">2.440</div>
+          <div class="kpi-note">Capacidade atual</div>
+        </div>
+
+        <div class="kpi-card kpi-warning">
+          <div class="kpi-top"><span class="kpi-label">Posições Desperdiçadas</span><span class="kpi-icon">⚠️</span></div>
+          <div class="kpi-value">580</div>
+          <div class="kpi-note">Posições a recuperar</div>
+        </div>
+
+        <div class="kpi-card">
+          <div class="kpi-top"><span class="kpi-label">Demanda 2030</span><span class="kpi-icon badge-meta">META</span></div>
+          <div class="kpi-value">+1.579</div>
+          <div class="kpi-note">Posições necessárias (projeção)</div>
+        </div>
+
+        <div class="kpi-card">
+          <div class="kpi-top"><span class="kpi-label">Cobertura Nacional</span><span class="kpi-icon">🚚</span></div>
+          <div class="kpi-value">5 dias</div>
+          <div class="kpi-note">Estoque nacional</div>
+        </div>
+
+        <div class="kpi-card">
+          <div class="kpi-top"><span class="kpi-label">Cobertura Importada</span><span class="kpi-icon">🛳️</span></div>
+          <div class="kpi-value">3,3 dias</div>
+          <div class="kpi-note">Estoque importado</div>
+        </div>
+      </div>
+
+      <div class="chart-grid">
+        <div class="card chart-card">
+          <h3>Ocupação do Estoque</h3>
+          <canvas id="chartOcupacao" width="400" height="240"></canvas>
+          <div class="chart-legend" id="legendOcupacao"></div>
+        </div>
+        <div class="card chart-card">
+          <h3>Movimentações por Corredor</h3>
+          <canvas id="chartMovCorredor" width="400" height="240"></canvas>
+        </div>
+        <div class="card chart-card">
+          <h3>Giro de Estoque</h3>
+          <canvas id="chartGiro" width="400" height="240"></canvas>
+          <div class="chart-legend" id="legendGiro"></div>
+        </div>
+        <div class="card chart-card">
+          <h3>Custo Logístico Unitário (simulado)</h3>
+          <canvas id="chartCusto" width="400" height="240"></canvas>
+        </div>
+      </div>
+
+      <div class="card scenario-card">
+        <h3>Cenário Atual × Smart Storage</h3>
+        <div class="scenario-grid">
+          <div class="scenario-col scenario-before">
+            <h4>Cenário Atual</h4>
+            <ul>
+              <li>2.440 posições</li>
+              <li>90% ocupação</li>
+              <li>580 posições desperdiçadas</li>
+              <li>Caixas invadindo área produtiva</li>
+              <li>Busca manual de peças</li>
+            </ul>
+          </div>
+          <div class="scenario-arrow">→</div>
+          <div class="scenario-col scenario-after">
+            <h4>Com Smart Storage <span class="badge-meta">META</span></h4>
+            <ul>
+              <li>Endereçamento digital</li>
+              <li>Melhor aproveitamento vertical</li>
+              <li>Busca rápida de peças</li>
+              <li>Organização baseada em movimentação</li>
+              <li>Redução de movimentações desnecessárias</li>
+              <li>Maior controle do estoque</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ---------- ESTOQUE ---------- -->
+    <section id="page-estoque" class="page">
+      <div class="page-header">
+        <h1>Estoque</h1>
+        <p class="page-subtitle">Cadastro e consulta de peças</p>
+      </div>
+
+      <div class="card">
+        <div class="search-row">
+          <input type="text" id="estoqueSearch" placeholder="Pesquisar por código, descrição, categoria ou localização...">
+        </div>
+        <div class="table-wrap">
+          <table class="data-table" id="tabelaEstoque">
+            <thead>
+              <tr>
+                <th>Código</th><th>Descrição</th><th>Categoria</th><th>Qtd.</th>
+                <th>Frequência</th><th>Peso</th><th>Localização</th><th>Ações</th>
+              </tr>
+            </thead>
+            <tbody id="tabelaEstoqueBody"></tbody>
+          </table>
+        </div>
+      </div>
+
+      <div class="card" id="formCadastroCard">
+        <h3 id="formCadastroTitle">+ Cadastrar Peça</h3>
+        <form id="formCadastroPeca" class="form-grid">
+          <input type="hidden" id="pecaEditId">
+          <label>Código<input required type="text" id="fCodigo"></label>
+          <label>Descrição<input required type="text" id="fDescricao"></label>
+          <label>Categoria
+            <select id="fCategoria">
+              <option>Componente</option><option>Fixação</option><option>Rolamento</option>
+              <option>Elétrico</option><option>Hidráulico</option><option>Outro</option>
+            </select>
+          </label>
+          <label>Quantidade<input required type="number" min="0" id="fQuantidade" value="0"></label>
+          <label>Peso (kg)<input required type="number" min="0" step="0.1" id="fPeso" value="1"></label>
+          <label>Altura (cm)<input type="number" min="0" id="fAltura" value="10"></label>
+          <label>Largura (cm)<input type="number" min="0" id="fLargura" value="10"></label>
+          <label>Comprimento (cm)<input type="number" min="0" id="fComprimento" value="10"></label>
+          <label>Frequência de Movimentação
+            <select id="fFrequencia"><option value="alta">Alta</option><option value="media" selected>Média</option><option value="baixa">Baixa</option></select>
+          </label>
+          <label>Região<input type="text" id="fRegiao" value="01"></label>
+          <label>Corredor
+            <select id="fCorredor"></select>
+          </label>
+          <label>Estante
+            <select id="fEstante"></select>
+          </label>
+          <label>Nível
+            <select id="fNivel"></select>
+          </label>
+          <label>Posição
+            <select id="fPosicao"></select>
+          </label>
+          <div class="form-actions">
+            <button type="submit" class="btn btn-primary" id="btnSubmitPeca">+ CADASTRAR PEÇA</button>
+            <button type="button" class="btn btn-ghost" id="btnCancelEdit" style="display:none">Cancelar edição</button>
+          </div>
+        </form>
+      </div>
+    </section>
+
+    <!-- ---------- LOCALIZAR PEÇA ---------- -->
+    <section id="page-localizar" class="page">
+      <div class="page-header">
+        <h1>Localizar Peça</h1>
+        <p class="page-subtitle">Encontre rapidamente a posição de uma peça no estoque</p>
+      </div>
+
+      <div class="card locate-card">
+        <h2>LOCALIZAR PEÇA</h2>
+        <p>Digite o código da peça</p>
+        <div class="locate-input-row">
+          <input type="text" id="locateInput" placeholder="Ex: ABC123">
+          <button id="btnLocateSearch" class="btn btn-primary">🔎 BUSCAR</button>
+        </div>
+        <button id="btnScan" class="btn btn-outline">📷 ESCANEAR CÓDIGO</button>
+
+        <div id="scannerArea" class="scanner-area hidden">
+          <div class="scanner-box">
+            <div class="scanner-line"></div>
+            <p>Simulando leitura de código de barras / QR Code...</p>
+          </div>
+          <p class="scanner-hint">Códigos de demonstração (clique para simular leitura):</p>
+          <div class="demo-codes" id="demoCodes"></div>
+        </div>
+
+        <div id="locateResult" class="locate-result hidden"></div>
+      </div>
+    </section>
+
+    <!-- ---------- ENDEREÇAMENTO / MAPA ---------- -->
+    <section id="page-enderecamento" class="page">
+      <div class="page-header">
+        <h1>Endereçamento</h1>
+        <p class="page-subtitle">Mapa de posições do armazém (Região → Corredor → Estante → Nível → Posição)</p>
+      </div>
+
+      <div class="card">
+        <div class="map-filters">
+          <label>Região <select id="mapRegiao"></select></label>
+          <label>Estante <select id="mapEstante"></select></label>
+          <label>Nível <select id="mapNivel"></select></label>
+        </div>
+        <div id="warehouseMap" class="warehouse-map"></div>
+        <div class="map-legend">
+          <span class="legend-item"><span class="dot dot-disponivel"></span>Disponível</span>
+          <span class="legend-item"><span class="dot dot-ocupado"></span>Ocupado</span>
+          <span class="legend-item"><span class="dot dot-reservado"></span>Reservado</span>
+          <span class="legend-item"><span class="dot dot-critico"></span>Crítico</span>
+        </div>
+      </div>
+
+      <div id="mapDetailCard" class="card hidden"></div>
+    </section>
+
+    <!-- ---------- MOVIMENTAÇÕES ---------- -->
+    <section id="page-movimentacoes" class="page">
+      <div class="page-header">
+        <h1>Movimentações</h1>
+        <p class="page-subtitle">Registro de entradas, saídas e transferências</p>
+      </div>
+
+      <div class="card">
+        <h3>Registrar Movimentação</h3>
+        <form id="formMovimentacao" class="form-grid">
+          <label>Peça
+            <select id="movPeca"></select>
+          </label>
+          <label>Tipo
+            <select id="movTipo">
+              <option value="entrada">Entrada</option>
+              <option value="saida">Saída</option>
+              <option value="transferencia">Transferência</option>
+            </select>
+          </label>
+          <label>Quantidade<input required type="number" min="1" id="movQuantidade" value="1"></label>
+          <label>Origem<input type="text" id="movOrigem" placeholder="Ex: Fornecedor"></label>
+          <label>Destino<input type="text" id="movDestino" placeholder="Ex: Região 01 / Corredor 03"></label>
+          <label>Responsável<input type="text" id="movResponsavel" value="Operador"></label>
+          <div class="form-actions">
+            <button type="submit" class="btn btn-primary">Registrar Movimentação</button>
+          </div>
+        </form>
+      </div>
+
+      <div class="card">
+        <div class="table-header-row">
+          <h3>Histórico de Movimentações</h3>
+          <div class="filters-row">
+            <select id="filterMovTipo">
+              <option value="">Todos os tipos</option>
+              <option value="entrada">Entrada</option>
+              <option value="saida">Saída</option>
+              <option value="transferencia">Transferência</option>
+            </select>
+            <input type="text" id="filterMovPeca" placeholder="Filtrar por código da peça">
+          </div>
+        </div>
+        <div class="table-wrap">
+          <table class="data-table">
+            <thead><tr><th>ID</th><th>Data</th><th>Peça</th><th>Tipo</th><th>Qtd.</th><th>Origem</th><th>Destino</th><th>Responsável</th></tr></thead>
+            <tbody id="tabelaMovimentacoesBody"></tbody>
+          </table>
+        </div>
+      </div>
+    </section>
+
+    <!-- ---------- ORGANIZAÇÃO INTELIGENTE ---------- -->
+    <section id="page-organizacao" class="page">
+      <div class="page-header">
+        <h1>Organização Inteligente</h1>
+        <p class="page-subtitle">Recomendação de posição baseada em regras de negócio</p>
+      </div>
+
+      <div class="card">
+        <h3>Analisar Peça</h3>
+        <div class="locate-input-row">
+          <select id="orgPecaSelect"></select>
+          <button id="btnAnalisarPeca" class="btn btn-primary">Analisar</button>
+        </div>
+        <div id="orgAnalise" class="org-analise hidden"></div>
+        <div id="orgRecomendacao" class="org-recomendacao hidden"></div>
+      </div>
+    </section>
+
+    <!-- ---------- INDICADORES ---------- -->
+    <section id="page-indicadores" class="page">
+      <div class="page-header">
+        <h1>Indicadores</h1>
+        <p class="page-subtitle">Desempenho operacional do armazém</p>
+      </div>
+      <div class="chart-grid">
+        <div class="card chart-card">
+          <h3>Giro de Estoque</h3>
+          <canvas id="chartGiro2" width="400" height="240"></canvas>
+          <div class="chart-legend" id="legendGiro2"></div>
+        </div>
+        <div class="card chart-card">
+          <h3>Acuracidade</h3>
+          <canvas id="chartAcuracidade" width="400" height="240"></canvas>
+        </div>
+        <div class="card chart-card">
+          <h3>Movimentações por Período</h3>
+          <canvas id="chartMovPeriodo" width="400" height="240"></canvas>
+        </div>
+        <div class="card chart-card">
+          <h3>Evolução do Custo Logístico Unitário</h3>
+          <canvas id="chartCusto2" width="400" height="240"></canvas>
+        </div>
+      </div>
+    </section>
+
+    <!-- ---------- CONFIGURAÇÕES ---------- -->
+    <section id="page-configuracoes" class="page">
+      <div class="page-header">
+        <h1>Configurações</h1>
+        <p class="page-subtitle">Parâmetros do protótipo e dados de demonstração</p>
+      </div>
+
+      <div class="card">
+        <h3>Dados de Demonstração</h3>
+        <p>Estes dados são fictícios e ficam salvos no <code>localStorage</code> do navegador.</p>
+        <div class="form-actions">
+          <button id="btnResetDemo" class="btn btn-outline">Restaurar dados de demonstração</button>
+          <button id="btnClearAll" class="btn btn-danger">Apagar todos os dados</button>
+        </div>
+      </div>
+
+      <div class="card">
+        <h3>Sobre este protótipo</h3>
+        <p>JTekt Smart Storage é um protótipo funcional construído em HTML, CSS e JavaScript puro, sem backend.
+        Todos os dados são simulados e armazenados localmente no navegador. Funcionalidades como leitura de
+        código de barras/QR e câmera são simuladas visualmente, sem integração real com hardware.</p>
+      </div>
+    </section>
+
+  </main>
+</div>
+
+<!-- Toast / notification container -->
+<div id="toastContainer" class="toast-container"></div>
+
+<!-- Demo mode overlay -->
+<div id="demoOverlay" class="demo-overlay hidden">
+  <div class="demo-panel">
+    <div class="demo-panel-header">
+      <span>🎬 Modo Demonstração</span>
+      <button id="btnDemoClose" class="btn-icon">✕</button>
+    </div>
+    <div id="demoStepText" class="demo-step-text"></div>
+    <div class="demo-panel-actions">
+      <button id="btnDemoPrev" class="btn btn-ghost">◀ Anterior</button>
+      <span id="demoStepCount" class="demo-step-count"></span>
+      <button id="btnDemoNext" class="btn btn-primary">Próximo ▶</button>
+    </div>
+  </div>
+</div>
+
+<script src="armazenamento.js"></script>
+<script src="estoque.js"></script>
+<script src="mapa.js"></script>
+<script src="localizacao.js"></script>
+<script src="organizacao.js"></script>
+<script src="movimentacoes.js"></script>
+<script src="dashboard.js"></script>
+<script src="demo.js"></script>
+<script src="app.js"></script>
+</body>
+</html>
